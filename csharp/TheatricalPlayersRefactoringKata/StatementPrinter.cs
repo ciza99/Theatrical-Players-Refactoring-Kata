@@ -104,8 +104,8 @@ namespace TheatricalPlayersRefactoringKata
             }
 
             result += "</table>\n";
-            result += string.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
-            result += string.Format("You earned {0} credits\n", volumeCredits);
+            result += string.Format(cultureInfo, "<p>Amount owed is <em>{0:C}</em></p>\n", Convert.ToDecimal(totalAmount / 100));
+            result += string.Format("<p>You earned <em>{0}</em> credits</p>\n", volumeCredits);
             return result;
         }
     }
