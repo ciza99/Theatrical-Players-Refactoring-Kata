@@ -20,9 +20,7 @@ namespace TheatricalPlayersRefactoringKata
                 var thisAmount = 0;
                 thisAmount = EvaluateAmount(perf, play);
                 // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten comedy attendees
-                if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
+                volumeCredits = GetVolumeCredits(volumeCredits, perf, play);
 
                 // print line for this order
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(thisAmount / 100), perf.Audience);
@@ -31,6 +29,14 @@ namespace TheatricalPlayersRefactoringKata
             result += string.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += string.Format("You earned {0} credits\n", volumeCredits);
             return result;
+        }
+
+        private static int GetVolumeCredits(int volumeCredits, Performance perf, Play play)
+        {
+            volumeCredits += Math.Max(perf.Audience - 30, 0);
+            // add extra credit for every ten comedy attendees
+            if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
+            return volumeCredits;
         }
 
         private static int EvaluateAmount(Performance perf, Play play)
@@ -96,9 +102,7 @@ namespace TheatricalPlayersRefactoringKata
                 var thisAmount = 0;
                 thisAmount = EvaluateAmount(perf, play);
                 // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten comedy attendees
-                if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
+                volumeCredits = GetVolumeCredits(volumeCredits, perf, play);
 
                 // print line for this order
                 result += string.Format(cultureInfo, "    <tr><td>{0}</td><td>{1}</td><td>{2:C}</td></tr>\n", play.Name, perf.Audience, Convert.ToDecimal(thisAmount / 100));
