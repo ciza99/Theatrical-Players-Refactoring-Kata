@@ -6,6 +6,7 @@ namespace TheatricalPlayersRefactoringKata
 {
     public class StatementPrinter
     {
+
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var totalAmount = 0;
@@ -13,25 +14,11 @@ namespace TheatricalPlayersRefactoringKata
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
-            foreach(var perf in invoice.Performances) 
+            foreach(var perf in invoice.Performances)
             {
                 var play = plays[perf.PlayID];
                 var thisAmount = 0;
-                switch (play.Type) 
-                {
-                    case "tragedy":
-                        thisAmount = ThisAmount(perf);
-                        break;
-                    case "comedy":
-                        thisAmount = 30000;
-                        if (perf.Audience > 20) {
-                            thisAmount += 10000 + 500 * (perf.Audience - 20);
-                        }
-                        thisAmount += 300 * perf.Audience;
-                        break;
-                    default:
-                        throw new Exception("unknown type: " + play.Type);
-                }
+                thisAmount = EvaluateAmount(perf, play);
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
                 // add extra credit for every ten comedy attendees
@@ -46,13 +33,47 @@ namespace TheatricalPlayersRefactoringKata
             return result;
         }
 
-        private static int ThisAmount(Performance perf)
+        private static int EvaluateAmount(Performance perf, Play play)
         {
             int thisAmount;
-            thisAmount = 40000;
-            if (perf.Audience > 30)
+            switch (play.Type)
             {
-                thisAmount += 1000 * (perf.Audience - 30);
+                case "tragedy":
+                    thisAmount = TragedyAmount(perf);
+                    break;
+                case "comedy":
+                    thisAmount = ComedyAmount(perf);
+                    break;
+                default:
+                    throw new Exception("unknown type: " + play.Type);
+            }
+
+            return thisAmount;
+        }
+
+        private static int ComedyAmount(Performance perf)
+        {
+            const int AUDIANCE_LIMIT = 20;
+            const int BASE_AMOUNT = 30000;
+
+            int thisAmount = BASE_AMOUNT;
+            if (perf.Audience > AUDIANCE_LIMIT)
+            {
+                thisAmount += 10000 + 500 * (perf.Audience - AUDIANCE_LIMIT);
+            }
+            thisAmount += 300 * perf.Audience;
+            return thisAmount;
+        }
+
+        private static int TragedyAmount(Performance perf)
+        {
+            const int AUDIANCE_LIMIT = 30;
+            const int BASE_AMOUNT = 40000;
+
+            int thisAmount = BASE_AMOUNT;
+            if (perf.Audience > AUDIANCE_LIMIT)
+            {
+                thisAmount += 1000 * (perf.Audience - AUDIANCE_LIMIT);
             }
 
             return thisAmount;
