@@ -83,11 +83,13 @@ namespace TheatricalPlayersRefactoringKata
         {
             var totalAmount = 0;
             var volumeCredits = 0;
-            var result = string.Format("Statement for {0}\n", invoice.Customer);
+            var result = "<html>\n";
+            result += string.Format("  <h1>Statement for {0}</h1>\n", invoice.Customer);
+
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
-            result += "<table>\n";
-            result += "<tr><th>play</th><th>seats</th><th>cost</th></tr>\n";
+            result += "  <table>\n";
+            result += "    <tr><th>play</th><th>seats</th><th>cost</th></tr>\n";
             foreach (var perf in invoice.Performances)
             {
                 var play = plays[perf.PlayID];
@@ -99,13 +101,14 @@ namespace TheatricalPlayersRefactoringKata
                 if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
 
                 // print line for this order
-                result += string.Format(cultureInfo, "<tr><td>{0}</td><td>{1}</td><td>{2:C}</td></tr>\n", play.Name, perf.Audience, Convert.ToDecimal(thisAmount / 100));
+                result += string.Format(cultureInfo, "    <tr><td>{0}</td><td>{1}</td><td>{2:C}</td></tr>\n", play.Name, perf.Audience, Convert.ToDecimal(thisAmount / 100));
                 totalAmount += thisAmount;
             }
 
-            result += "</table>\n";
-            result += string.Format(cultureInfo, "<p>Amount owed is <em>{0:C}</em></p>\n", Convert.ToDecimal(totalAmount / 100));
-            result += string.Format("<p>You earned <em>{0}</em> credits</p>\n", volumeCredits);
+            result += "  </table>\n";
+            result += string.Format(cultureInfo, "  <p>Amount owed is <em>{0:C}</em></p>\n", Convert.ToDecimal(totalAmount / 100));
+            result += string.Format("  <p>You earned <em>{0}</em> credits</p>\n", volumeCredits);
+            result += "</html>";
             return result;
         }
     }
